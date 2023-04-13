@@ -5,7 +5,9 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import createError from 'http-errors'
 import logger from 'morgan'
+import methodOverride from 'method-override'
 import './config/database.js'
+
 
 // import routers
 import { router as indexRouter } from './routes/index.js'
@@ -17,6 +19,12 @@ const app = express()
 // view engine setup
 app.set('view engine', 'ejs')
 
+app.use(function(req, res, next) {
+  console.log('Hello SEI!')
+  req.time = new Date().toLocaleTimeString()
+  next()
+})
+
 // basic middleware
 app.use(logger('dev'))
 app.use(express.json())
@@ -26,6 +34,7 @@ app.use(
     path.join(path.dirname(fileURLToPath(import.meta.url)), 'public')
   )
 )
+app.use(methodOverride('_method'))
 
 // mount imported routes
 app.use('/', indexRouter)
